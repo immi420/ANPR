@@ -39,16 +39,17 @@ class DetectionPredictor(BasePredictor):
 
     def postprocess(self, preds, img, orig_img):
         preds = ops.non_max_suppression(preds,
-                                        self.args.conf,
-                                        self.args.iou,
-                                        agnostic=self.args.agnostic_nms,
-                                        max_det=self.args.max_det)
+                                    self.args.conf,
+                                    self.args.iou,
+                                    agnostic=self.args.agnostic_nms,
+                                    max_det=self.args.max_det)
 
         for i, pred in enumerate(preds):
             shape = orig_img[i].shape if self.webcam else orig_img.shape
             pred[:, :4] = ops.scale_boxes(img.shape[2:], pred[:, :4], shape).round()
 
         return preds
+
 
     def write_results(self, idx, preds, batch):
         p, im, im0 = batch
